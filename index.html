@@ -6,76 +6,28 @@
 <title>Live</title>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
-  font-family: 'Segoe UI', Arial, sans-serif;
-  background: linear-gradient(135deg, #0f172a, #1e293b);
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0f172a;
   color: white;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.container {
-  padding: 30px;
-  max-width: 500px;
-  width: 90%;
-  background: rgba(255,255,255,0.05);
-  border-radius: 20px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 15px 40px rgba(0,0,0,0.4);
   text-align: center;
 }
 
-.logo {
-  font-size: 14px;
-  opacity: 0.7;
-  margin-bottom: 10px;
+.container {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 h1 {
-  font-size: clamp(24px, 5vw, 32px);
-  margin-bottom: 25px;
+  font-size: clamp(22px, 5vw, 36px);
+  margin-bottom: 20px;
 }
 
 #countdown {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.time-box {
-  flex: 1;
-  background: rgba(255,255,255,0.08);
-  padding: 15px;
-  border-radius: 12px;
-  transition: transform 0.2s;
-}
-
-.time-box:hover {
-  transform: scale(1.05);
-}
-
-.time {
-  font-size: 22px;
+  font-size: clamp(20px, 6vw, 32px);
   font-weight: bold;
-}
-
-.label {
-  font-size: 12px;
-  opacity: 0.7;
-}
-
-.info {
-  margin-top: 20px;
-  font-size: 13px;
-  opacity: 0.6;
 }
 </style>
 </head>
@@ -83,35 +35,14 @@ h1 {
 <body>
 
 <div class="container">
-  <div class="logo">ClickSaber + Plurall</div>
   <h1>A live começa em:</h1>
-
-  <div id="countdown">
-    <div class="time-box">
-      <div class="time" id="d">0</div>
-      <div class="label">Dias</div>
-    </div>
-    <div class="time-box">
-      <div class="time" id="h">0</div>
-      <div class="label">Horas</div>
-    </div>
-    <div class="time-box">
-      <div class="time" id="m">0</div>
-      <div class="label">Min</div>
-    </div>
-    <div class="time-box">
-      <div class="time" id="s">0</div>
-      <div class="label">Seg</div>
-    </div>
-  </div>
-
-  <div class="info">Você será direcionado automaticamente</div>
+  <div id="countdown">Carregando...</div>
 </div>
 
 <script>
 
 // 🔥 CONFIG
-var dataEvento = new Date("Mar 25, 2026 15:00:00").getTime();
+var dataEvento = new Date("Mar 20, 2026 00:57:00").getTime();
 
 var linkFormulario = "https://forms.zohopublic.com/sabers/form/LiveFormativaPlataformaClickSaberPlurall1/formperma/5LD4JToeYj2P1CBy58rRVP_H86e2azMkdpyW4DpHbvw";
 var linkEvento = "https://teams.microsoft.com/meet/22305340668222?p=j9pNsfJWKuFR9jnrQl";
@@ -135,18 +66,21 @@ function atualizar() {
   var now = new Date().getTime();
   var distance = dataEvento - now;
 
-  // 🧠 ANTES DO EVENTO
+  // 🧠 REGRA 1: ANTES DO EVENTO → SÓ CONTADOR
   if (distance > 0) {
 
-    document.getElementById("d").innerText = Math.floor(distance / (1000 * 60 * 60 * 24));
-    document.getElementById("h").innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    document.getElementById("m").innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    document.getElementById("s").innerText = Math.floor((distance % (1000 * 60)) / 1000);
+    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    return;
+    document.getElementById("countdown").innerHTML =
+      days + " dias " + hours + "h " + minutes + "m " + seconds + "s";
+
+    return; // 🔥 impede QUALQUER redirecionamento
   }
 
-  // 🧠 CHEGOU A HORA
+  // 🧠 REGRA 2: CHEGOU A HORA → DECIDE
   redirecionado = true;
 
   var inscrito = localStorage.getItem("inscrito") === "sim";
@@ -160,6 +94,8 @@ function atualizar() {
 
 // 🔁 LOOP
 setInterval(atualizar, 1000);
+
+// 🔥 PRIMEIRA EXECUÇÃO
 atualizar();
 
 </script>
