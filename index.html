@@ -42,7 +42,7 @@ h1 {
 <script>
 
 // 🔥 CONFIG
-var dataEvento = new Date("Mar 20, 2026 00:43:00").getTime();
+var dataEvento = new Date("Mar 25, 2026 15:00:00").getTime();
 
 var linkFormulario = "https://forms.zohopublic.com/sabers/form/LiveFormativaPlataformaClickSaberPlurall1/formperma/5LD4JToeYj2P1CBy58rRVP_H86e2azMkdpyW4DpHbvw";
 var linkEvento = "https://teams.microsoft.com/meet/22305340668222?p=j9pNsfJWKuFR9jnrQl";
@@ -50,30 +50,39 @@ var linkEvento = "https://teams.microsoft.com/meet/22305340668222?p=j9pNsfJWKuFR
 // 🔥 PARÂMETROS
 var params = new URLSearchParams(window.location.search);
 
-// 🔥 SE VEIO DO FORM
+// 🔥 SE VEIO DO FORM → SALVA
 if (params.get("ok") === "1") {
   localStorage.setItem("inscrito", "sim");
 }
 
+// 🔒 CONTROLE PARA EVITAR LOOP
+var redirecionado = false;
+
 // ⏳ FUNÇÃO PRINCIPAL
 function atualizar() {
+
+  if (redirecionado) return;
 
   var now = new Date().getTime();
   var distance = dataEvento - now;
 
   var inscrito = localStorage.getItem("inscrito") === "sim";
 
-  // 🔥 REGRA CORRETA
+  // 🔥 SÓ DECIDE REDIRECIONAR QUANDO CHEGAR A HORA
   if (distance < 0) {
+
+    redirecionado = true;
+
     if (inscrito) {
       window.location.href = linkEvento;
     } else {
       window.location.href = linkFormulario;
     }
+
     return;
   }
 
-  // ⏳ CONTADOR NORMAL
+  // ⏳ CONTADOR
   var days = Math.floor(distance / (1000 * 60 * 60 * 24));
   var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
@@ -83,8 +92,10 @@ function atualizar() {
     days + " dias " + hours + "h " + minutes + "m " + seconds + "s";
 }
 
-// 🔁 LOOP
+// 🔁 LOOP CONTROLADO
 setInterval(atualizar, 1000);
+
+// 🔥 EXECUTA UMA VEZ
 atualizar();
 
 </script>
