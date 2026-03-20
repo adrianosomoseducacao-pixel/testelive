@@ -28,7 +28,6 @@ h1 {
 #countdown {
   font-size: clamp(20px, 6vw, 32px);
   font-weight: bold;
-  margin-bottom: 20px;
 }
 </style>
 </head>
@@ -42,8 +41,8 @@ h1 {
 
 <script>
 
-// 🔥 CONFIGURAÇÃO
-var dataEvento = new Date("Mar 20, 2026 00:37:00").getTime();
+// 🔥 CONFIG
+var dataEvento = new Date("Mar 20, 2026 00:41:00").getTime();
 
 var linkFormulario = "https://forms.zohopublic.com/sabers/form/LiveFormativaPlataformaClickSaberPlurall1/formperma/5LD4JToeYj2P1CBy58rRVP_H86e2azMkdpyW4DpHbvw";
 var linkEvento = "https://teams.microsoft.com/meet/22305340668222?p=j9pNsfJWKuFR9jnrQl";
@@ -56,24 +55,25 @@ if (params.get("ok") === "1") {
   localStorage.setItem("inscrito", "sim");
 }
 
-// 🔥 SE JÁ É INSCRITO
-if (localStorage.getItem("inscrito") === "sim") {
-  window.location.href = linkEvento;
-}
-
-// ⏳ FUNÇÃO DE CONTAGEM
-function atualizarContador() {
+// ⏳ FUNÇÃO PRINCIPAL
+function atualizar() {
 
   var now = new Date().getTime();
   var distance = dataEvento - now;
 
-  // 🔓 SE CHEGOU A HORA
+  var inscrito = localStorage.getItem("inscrito") === "sim";
+
+  // 🔥 REGRA CORRETA
   if (distance < 0) {
-    document.getElementById("countdown").innerHTML = "Redirecionando...";
-    window.location.href = linkFormulario;
+    if (inscrito) {
+      window.location.href = linkEvento;
+    } else {
+      window.location.href = linkFormulario;
+    }
     return;
   }
 
+  // ⏳ CONTADOR NORMAL
   var days = Math.floor(distance / (1000 * 60 * 60 * 24));
   var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
@@ -83,11 +83,9 @@ function atualizarContador() {
     days + " dias " + hours + "h " + minutes + "m " + seconds + "s";
 }
 
-// 🔁 RODA A CADA SEGUNDO
-setInterval(atualizarContador, 1000);
-
-// 🔥 RODA NA HORA (importante)
-atualizarContador();
+// 🔁 LOOP
+setInterval(atualizar, 1000);
+atualizar();
 
 </script>
 
