@@ -42,7 +42,7 @@ h1 {
 <script>
 
 // 🔥 CONFIG
-var dataEvento = new Date("Mar 25, 2026 15:00:00").getTime();
+var dataEvento = new Date("Jan 01, 2026 15:00:00").getTime();
 
 var linkFormulario = "https://forms.zohopublic.com/sabers/form/LiveFormativaPlataformaClickSaberPlurall1/formperma/5LD4JToeYj2P1CBy58rRVP_H86e2azMkdpyW4DpHbvw";
 var linkEvento = "https://teams.microsoft.com/meet/22305340668222?p=j9pNsfJWKuFR9jnrQl";
@@ -55,7 +55,7 @@ if (params.get("ok") === "1") {
   localStorage.setItem("inscrito", "sim");
 }
 
-// 🔒 CONTROLE PARA EVITAR LOOP
+// 🔒 CONTROLE
 var redirecionado = false;
 
 // ⏳ FUNÇÃO PRINCIPAL
@@ -66,36 +66,36 @@ function atualizar() {
   var now = new Date().getTime();
   var distance = dataEvento - now;
 
-  var inscrito = localStorage.getItem("inscrito") === "sim";
+  // 🧠 REGRA 1: ANTES DO EVENTO → SÓ CONTADOR
+  if (distance > 0) {
 
-  // 🔥 SÓ DECIDE REDIRECIONAR QUANDO CHEGAR A HORA
-  if (distance < 0) {
+    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    redirecionado = true;
+    document.getElementById("countdown").innerHTML =
+      days + " dias " + hours + "h " + minutes + "m " + seconds + "s";
 
-    if (inscrito) {
-      window.location.href = linkEvento;
-    } else {
-      window.location.href = linkFormulario;
-    }
-
-    return;
+    return; // 🔥 impede QUALQUER redirecionamento
   }
 
-  // ⏳ CONTADOR
-  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  // 🧠 REGRA 2: CHEGOU A HORA → DECIDE
+  redirecionado = true;
 
-  document.getElementById("countdown").innerHTML =
-    days + " dias " + hours + "h " + minutes + "m " + seconds + "s";
+  var inscrito = localStorage.getItem("inscrito") === "sim";
+
+  if (inscrito) {
+    window.location.href = linkEvento;
+  } else {
+    window.location.href = linkFormulario;
+  }
 }
 
-// 🔁 LOOP CONTROLADO
+// 🔁 LOOP
 setInterval(atualizar, 1000);
 
-// 🔥 EXECUTA UMA VEZ
+// 🔥 PRIMEIRA EXECUÇÃO
 atualizar();
 
 </script>
