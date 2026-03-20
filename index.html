@@ -41,6 +41,8 @@ h1 {
 
 <script>
 
+window.onload = function() {
+
 // 🔥 CONFIG
 var dataEvento = new Date("Mar 25, 2026 15:00:00").getTime();
 
@@ -52,24 +54,20 @@ var params = new URLSearchParams(window.location.search);
 
 // 🔥 SALVA INSCRIÇÃO
 if (params.get("ok") === "1") {
-  try {
-    localStorage.setItem("inscrito", "sim");
-  } catch (e) {}
+  localStorage.setItem("inscrito", "sim");
 }
 
-// 🔒 CONTROLE
 var redirecionado = false;
 
-// ⏳ FUNÇÃO PRINCIPAL
 function atualizar() {
 
   var el = document.getElementById("countdown");
-  if (!el) return;
+  if (!el) return; // 🔒 proteção
 
   var now = new Date().getTime();
   var distance = dataEvento - now;
 
-  // 🔒 ANTES DO EVENTO → SÓ CONTADOR
+  // 🔒 ANTES DO EVENTO
   if (distance > 0) {
 
     var days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -77,20 +75,18 @@ function atualizar() {
     var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    el.innerHTML = days + " dias " + hours + "h " + minutes + "m " + seconds + "s";
+    el.innerHTML =
+      days + " dias " + hours + "h " + minutes + "m " + seconds + "s";
+
     return;
   }
 
-  // 🔥 DEPOIS DO EVENTO → REDIRECIONA UMA VEZ
+  // ⏰ DEPOIS DO EVENTO
   if (!redirecionado) {
 
     redirecionado = true;
 
-    var inscrito = false;
-
-    try {
-      inscrito = localStorage.getItem("inscrito") === "sim";
-    } catch (e) {}
+    var inscrito = localStorage.getItem("inscrito") === "sim";
 
     if (inscrito) {
       window.location.href = linkEvento;
@@ -105,6 +101,8 @@ setInterval(atualizar, 1000);
 
 // 🔥 PRIMEIRA EXECUÇÃO
 atualizar();
+
+};
 
 </script>
 
