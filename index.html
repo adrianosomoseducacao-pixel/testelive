@@ -42,14 +42,14 @@ h1 {
 
 <div class="container">
   <h1>A live começa em:</h1>
-  <div id="countdown"></div>
+  <div id="countdown">Verificando acesso...</div>
   <div class="info">Você será direcionado automaticamente</div>
 </div>
 
 <script>
 
-// 🔥 TESTE: 5 SEGUNDOS
-var dataEvento = new Date().getTime() + 5000;
+// 🔥 DATA NO PASSADO (SIMULA EVENTO JÁ LIBERADO)
+var dataEvento = new Date("Mar 19, 2026 15:00:00").getTime();
 
 // 🔥 LINKS
 var linkFormulario = "https://forms.zohopublic.com/sabers/form/LiveFormativaPlataformaClickSaberPlurall1/formperma/5LD4JToeYj2P1CBy58rRVP_H86e2azMkdpyW4DpHbvw";
@@ -58,37 +58,24 @@ var linkEvento = "https://teams.microsoft.com/meet/22305340668222?p=j9pNsfJWKuFR
 // 🔥 PARÂMETROS
 var params = new URLSearchParams(window.location.search);
 
-// 🔥 SE VEIO DO FORM
+// 🔥 SE VEIO DO FORM → MARCA COMO INSCRITO
 if (params.get("ok") === "1") {
   localStorage.setItem("inscrito", "sim");
 }
 
-// 🔥 SE JÁ É INSCRITO
+// 🔥 SE JÁ É INSCRITO → VAI DIRETO PRO EVENTO
 if (localStorage.getItem("inscrito") === "sim") {
   window.location.href = linkEvento;
 }
 
-// ⏳ CONTADOR
-var x = setInterval(function() {
+// 🔥 VERIFICA TEMPO
+var now = new Date().getTime();
+var distance = dataEvento - now;
 
-  var now = new Date().getTime();
-  var distance = dataEvento - now;
-
-  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-  document.getElementById("countdown").innerHTML =
-    seconds + " segundos";
-
-  // 🔓 REDIRECIONA PRO FORM
-  if (distance < 0) {
-    clearInterval(x);
-
-    document.getElementById("countdown").innerHTML = "Redirecionando...";
-
-    window.location.href = linkFormulario;
-  }
-
-}, 1000);
+// 🔥 COMO A DATA JÁ PASSOU → REDIRECIONA IMEDIATAMENTE
+if (distance < 0) {
+  window.location.href = linkFormulario;
+}
 
 </script>
 
