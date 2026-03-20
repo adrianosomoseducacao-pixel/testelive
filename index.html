@@ -16,6 +16,8 @@ body {
 
 .container {
   padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 h1 {
@@ -26,13 +28,13 @@ h1 {
 #countdown {
   font-size: clamp(20px, 6vw, 32px);
   font-weight: bold;
-  margin-bottom: 20px;
 }
 
 iframe {
   width: 100%;
-  height: 100vh;
+  height: 80vh;
   border: none;
+  border-radius: 8px;
 }
 </style>
 </head>
@@ -45,45 +47,51 @@ iframe {
 </div>
 
 <script>
-// 🔥 CONFIGURAÇÕES
-var dataEvento = new Date("Mar 25, 2026 15:00:00").getTime();
-var linkFormulario = "https://zfrmz.com/cPmVfg2Gk4GZD3tFvE3o";
+
+// 🔥 TESTE: 5 SEGUNDOS A PARTIR DE AGORA
+var dataEvento = new Date().getTime() + 5000;
+
 var linkEvento = "https://teams.microsoft.com/meet/22305340668222?p=j9pNsfJWKuFR9jnrQl";
 
-// 🔥 SE JÁ SE CADASTROU → VAI DIRETO PRO EVENTO
+// 🔥 PEGAR PARÂMETRO DA URL
+var params = new URLSearchParams(window.location.search);
+
+// 🔥 SE VEIO DO FORM → MARCA COMO INSCRITO
+if (params.get("ok") === "1") {
+  localStorage.setItem("inscrito", "sim");
+}
+
+// 🔥 SE JÁ É INSCRITO → VAI DIRETO
 if (localStorage.getItem("inscrito") === "sim") {
   window.location.href = linkEvento;
 }
 
-// ⏳ CONTAGEM
+// ⏳ CONTADOR
 var x = setInterval(function() {
 
   var now = new Date().getTime();
   var distance = dataEvento - now;
 
-  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
   var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
   document.getElementById("countdown").innerHTML =
-    days + " dias " + hours + "h " + minutes + "m " + seconds + "s";
+    seconds + " segundos";
 
-  // 🔓 QUANDO CHEGAR A HORA → CARREGA FORM NA MESMA PÁGINA
+  // 🔓 LIBERA FORM
   if (distance < 0) {
     clearInterval(x);
 
     document.getElementById("conteudo").innerHTML = `
-      <iframe src="${linkFormulario}"></iframe>
+      <h1>Preencha para acessar a live</h1>
+
+      <iframe 
+        src="https://forms.zohopublic.com/sabers/form/LiveFormativaPlataformaClickSaberPlurall1/formperma/5LD4JToeYj2P1CBy58rRVP_H86e2azMkdpyW4DpHbvw">
+      </iframe>
     `;
   }
 
 }, 1000);
 
-// 🔥 DETECTA SE VOLTOU DO FORM (E SALVA COMO INSCRITO)
-if (window.location.href.includes("zfrmz.com")) {
-  localStorage.setItem("inscrito", "sim");
-}
 </script>
 
 </body>
