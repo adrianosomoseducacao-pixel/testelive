@@ -1,36 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: white;
+  text-align: center;
+}
+
+.container {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: clamp(22px, 5vw, 36px);
+  margin-bottom: 20px;
+}
+
+#countdown {
+  font-size: clamp(20px, 6vw, 32px);
+  font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>A live começa em:</h1>
+  <div id="countdown">Carregando...</div>
+</div>
+
 <script>
 
-// 🔥 CONFIG
+// =============================
+// 🔥 CONFIGURAÇÃO
+// =============================
 var dataEvento = new Date("Mar 25, 2026 15:00:00").getTime();
 
 var linkFormulario = "https://forms.zohopublic.com/sabers/form/LiveFormativaPlataformaClickSaberPlurall1/formperma/5LD4JToeYj2P1CBy58rRVP_H86e2azMkdpyW4DpHbvw";
 var linkEvento = "https://teams.microsoft.com/meet/22305340668222?p=j9pNsfJWKuFR9jnrQl";
 
-// 🔥 PARÂMETROS
+// =============================
+// 🔥 CAPTURA PARÂMETROS
+// =============================
 var params = new URLSearchParams(window.location.search);
 
-// 🔥 SALVA INSCRIÇÃO
+// 🔥 SE VEIO DO FORM → SALVA INSCRIÇÃO
 if (params.get("ok") === "1") {
   localStorage.setItem("inscrito", "sim");
 }
 
-// 🔒 CONTROLE
+// =============================
+// 🔒 CONTROLE DE REDIRECIONAMENTO
+// =============================
 var redirecionado = false;
 
-// 🔥 FUNÇÃO PRINCIPAL
+// =============================
+// ⏳ FUNÇÃO PRINCIPAL
+// =============================
 function atualizar() {
 
+  // Evita múltiplos redirecionamentos
   if (redirecionado) return;
 
   var now = new Date().getTime();
   var distance = dataEvento - now;
 
-  // =============================
-  // 🔒 REGRA ABSOLUTA
-  // =============================
+  // ======================================
+  // 🔒 REGRA ABSOLUTA → ANTES DO EVENTO
+  // ======================================
   if (distance > 0) {
 
-    // ⏳ CONTADOR
     var days = Math.floor(distance / (1000 * 60 * 60 * 24));
     var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
@@ -39,12 +88,12 @@ function atualizar() {
     document.getElementById("countdown").innerHTML =
       days + " dias " + hours + "h " + minutes + "m " + seconds + "s";
 
-    return; // 🔥 AQUI É O SEGREDO → TRAVA TOTAL
+    return; // 🚨 NÃO deixa passar daqui
   }
 
-  // =============================
-  // ⏰ CHEGOU A HORA
-  // =============================
+  // ======================================
+  // ⏰ CHEGOU A HORA → DECIDE
+  // ======================================
   redirecionado = true;
 
   var inscrito = localStorage.getItem("inscrito") === "sim";
@@ -56,10 +105,15 @@ function atualizar() {
   }
 }
 
+// =============================
 // 🔁 LOOP
+// =============================
 setInterval(atualizar, 1000);
 
-// 🔥 EXECUTA UMA VEZ
+// 🔥 EXECUTA IMEDIATAMENTE
 atualizar();
 
 </script>
+
+</body>
+</html>
