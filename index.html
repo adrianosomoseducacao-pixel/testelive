@@ -75,8 +75,10 @@ function atualizar() {
     var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
+   if (el) {
     el.innerHTML =
       days + " dias " + hours + "h " + minutes + "m " + seconds + "s";
+  }
 
     return;
   }
@@ -100,7 +102,42 @@ function atualizar() {
 setInterval(atualizar, 1000);
 
 // 🔥 PRIMEIRA EXECUÇÃO
-atualizar();
+function atualizar() {
+
+  var el = document.getElementById("countdown");
+
+  // 🔒 se não existe, simplesmente não faz nada
+  if (!el) return;
+
+  var now = new Date().getTime();
+  var distance = dataEvento - now;
+
+  if (distance > 0) {
+
+    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    el.innerHTML =
+      days + " dias " + hours + "h " + minutes + "m " + seconds + "s";
+
+    return;
+  }
+
+  if (!redirecionado) {
+
+    redirecionado = true;
+
+    var inscrito = localStorage.getItem("inscrito") === "sim";
+
+    if (inscrito) {
+      window.location.href = linkEvento;
+    } else {
+      window.location.href = linkFormulario;
+    }
+  }
+}
 
 };
 
