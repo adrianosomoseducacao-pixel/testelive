@@ -43,26 +43,68 @@ h1 {
 
 window.onload = function() {
 
+// =============================
 // 🔥 CONFIG
-var dataEvento = new Date("Mar 25, 2026 15:00:00").getTime();
+// =============================
+var dataEvento = new Date("Mar 19, 2026 15:00:00").getTime();
 
 var linkFormulario = "https://forms.zohopublic.com/sabers/form/LiveFormativaPlataformaClickSaberPlurall1/formperma/5LD4JToeYj2P1CBy58rRVP_H86e2azMkdpyW4DpHbvw";
 var linkEvento = "https://teams.microsoft.com/meet/22305340668222?p=j9pNsfJWKuFR9jnrQl";
 
+// =============================
 // 🔥 PARÂMETROS
+// =============================
 var params = new URLSearchParams(window.location.search);
 
-// 🔥 SALVA INSCRIÇÃO
+// =============================
+// 🔥 SALVAR INSCRIÇÃO COM DATA
+// =============================
 if (params.get("ok") === "1") {
+  var agora = new Date().getTime();
+
   localStorage.setItem("inscrito", "sim");
+  localStorage.setItem("inscrito_data", agora);
 }
 
+// =============================
+// 🔥 VALIDAR INSCRIÇÃO (72H)
+// =============================
+function verificarInscricao() {
+
+  var status = localStorage.getItem("inscrito");
+  var dataSalva = localStorage.getItem("inscrito_data");
+
+  if (status === "sim" && dataSalva) {
+
+    var agora = new Date().getTime();
+    var tempoPassado = agora - parseInt(dataSalva);
+
+    var limite = 30 * 1000; // 72h
+
+    if (tempoPassado < limite) {
+      return true;
+    } else {
+      // expirou
+      localStorage.removeItem("inscrito");
+      localStorage.removeItem("inscrito_data");
+    }
+  }
+
+  return false;
+}
+
+// =============================
+// 🔒 CONTROLE
+// =============================
 var redirecionado = false;
 
+// =============================
+// ⏳ FUNÇÃO PRINCIPAL
+// =============================
 function atualizar() {
 
   var el = document.getElementById("countdown");
-  if (!el) return; // 🔒 proteção
+  if (!el) return;
 
   var now = new Date().getTime();
   var distance = dataEvento - now;
@@ -75,10 +117,8 @@ function atualizar() {
     var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-   if (el) {
     el.innerHTML =
       days + " dias " + hours + "h " + minutes + "m " + seconds + "s";
-  }
 
     return;
   }
@@ -88,7 +128,7 @@ function atualizar() {
 
     redirecionado = true;
 
-    var inscrito = localStorage.getItem("inscrito") === "sim";
+    var inscrito = verificarInscricao();
 
     if (inscrito) {
       window.location.href = linkEvento;
@@ -98,46 +138,13 @@ function atualizar() {
   }
 }
 
+// =============================
 // 🔁 LOOP
+// =============================
 setInterval(atualizar, 1000);
 
-// 🔥 PRIMEIRA EXECUÇÃO
-function atualizar() {
-
-  var el = document.getElementById("countdown");
-
-  // 🔒 se não existe, simplesmente não faz nada
-  if (!el) return;
-
-  var now = new Date().getTime();
-  var distance = dataEvento - now;
-
-  if (distance > 0) {
-
-    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-    el.innerHTML =
-      days + " dias " + hours + "h " + minutes + "m " + seconds + "s";
-
-    return;
-  }
-
-  if (!redirecionado) {
-
-    redirecionado = true;
-
-    var inscrito = localStorage.getItem("inscrito") === "sim";
-
-    if (inscrito) {
-      window.location.href = linkEvento;
-    } else {
-      window.location.href = linkFormulario;
-    }
-  }
-}
+// 🔥 EXECUÇÃO INICIAL
+atualizar();
 
 };
 
