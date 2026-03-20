@@ -11,16 +11,11 @@ body {
   font-family: Arial, sans-serif;
   background: #0f172a;
   color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
   text-align: center;
 }
 
 .container {
   padding: 20px;
-  max-width: 500px;
 }
 
 h1 {
@@ -34,26 +29,26 @@ h1 {
   margin-bottom: 20px;
 }
 
-.info {
-  font-size: 14px;
-  opacity: 0.8;
+iframe {
+  width: 100%;
+  height: 100vh;
+  border: none;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div id="conteudo" class="container">
   <h1>A live começa em:</h1>
   <div id="countdown"></div>
-  <div class="info">Você será redirecionado automaticamente</div>
 </div>
 
 <script>
 // 🔥 CONFIGURAÇÕES
 var dataEvento = new Date("Mar 25, 2026 15:00:00").getTime();
 var linkFormulario = "https://zfrmz.com/cPmVfg2Gk4GZD3tFvE3o";
-var linkEvento = "COLOQUE_AQUI_LINK_FINAL_DO_EVENTO";
+var linkEvento = "COLOQUE_AQUI_LINK_DO_EVENTO";
 
 // 🔥 SE JÁ SE CADASTROU → VAI DIRETO PRO EVENTO
 if (localStorage.getItem("inscrito") === "sim") {
@@ -74,15 +69,21 @@ var x = setInterval(function() {
   document.getElementById("countdown").innerHTML =
     days + " dias " + hours + "h " + minutes + "m " + seconds + "s";
 
-  // 🔓 QUANDO CHEGAR A HORA
+  // 🔓 QUANDO CHEGAR A HORA → CARREGA FORM NA MESMA PÁGINA
   if (distance < 0) {
     clearInterval(x);
-    document.getElementById("countdown").innerHTML = "Redirecionando...";
 
-    window.location.href = linkFormulario;
+    document.getElementById("conteudo").innerHTML = `
+      <iframe src="${linkFormulario}"></iframe>
+    `;
   }
 
 }, 1000);
+
+// 🔥 DETECTA SE VOLTOU DO FORM (E SALVA COMO INSCRITO)
+if (window.location.href.includes("zfrmz.com")) {
+  localStorage.setItem("inscrito", "sim");
+}
 </script>
 
 </body>
