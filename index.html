@@ -9,6 +9,8 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: white;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -18,15 +20,23 @@ body {
 
 .container {
   padding: 20px;
+  max-width: 500px;
 }
 
 h1 {
   font-size: clamp(22px, 5vw, 36px);
+  margin-bottom: 20px;
 }
 
 #countdown {
   font-size: clamp(20px, 6vw, 32px);
   font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.info {
+  font-size: 14px;
+  opacity: 0.8;
 }
 </style>
 </head>
@@ -36,25 +46,42 @@ h1 {
 <div class="container">
   <h1>A live começa em:</h1>
   <div id="countdown"></div>
+  <div class="info">Você será redirecionado automaticamente</div>
 </div>
 
 <script>
-var eventDate = new Date().getTime() + 5000;
+// 🔥 CONFIGURAÇÕES
+var dataEvento = new Date("Mar 25, 2026 15:00:00").getTime();
+var linkFormulario = "https://zfrmz.com/cPmVfg2Gk4GZD3tFvE3o";
+var linkEvento = "COLOQUE_AQUI_LINK_FINAL_DO_EVENTO";
 
+// 🔥 SE JÁ SE CADASTROU → VAI DIRETO PRO EVENTO
+if (localStorage.getItem("inscrito") === "sim") {
+  window.location.href = linkEvento;
+}
+
+// ⏳ CONTAGEM
 var x = setInterval(function() {
-  var now = new Date().getTime();
-  var distance = eventDate - now;
 
+  var now = new Date().getTime();
+  var distance = dataEvento - now;
+
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
   var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
   document.getElementById("countdown").innerHTML =
-  seconds + " segundos";
+    days + " dias " + hours + "h " + minutes + "m " + seconds + "s";
 
+  // 🔓 QUANDO CHEGAR A HORA
   if (distance < 0) {
     clearInterval(x);
     document.getElementById("countdown").innerHTML = "Redirecionando...";
-    window.location.href = "https://forms.zohopublic.com/sabers/form/LiveFormativaPlataformaClickSaberPlurall1/formperma/5LD4JToeYj2P1CBy58rRVP_H86e2azMkdpyW4DpHbvw";
+
+    window.location.href = linkFormulario;
   }
+
 }, 1000);
 </script>
 
