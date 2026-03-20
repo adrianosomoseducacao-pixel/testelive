@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+}
+
+.container {
+  padding: 20px;
+}
+
+h1 {
+  font-size: clamp(22px, 5vw, 36px);
+}
+
+#countdown {
+  font-size: clamp(20px, 6vw, 32px);
+  font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>A live começa em:</h1>
+  <div id="countdown"></div>
+</div>
+
+<script>
+var eventDate = new Date().getTime() + 5000;
+
+var x = setInterval(function() {
+  var now = new Date().getTime();
+  var distance = eventDate - now;
+
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+  document.getElementById("countdown").innerHTML =
+  seconds + " segundos";
+
+  if (distance < 0) {
+    clearInterval(x);
+    document.getElementById("countdown").innerHTML = "Redirecionando...";
+    window.location.href = "https://forms.zohopublic.com/sabers/form/LiveFormativaPlataformaClickSaberPlurall1/formperma/5LD4JToeYj2P1CBy58rRVP_H86e2azMkdpyW4DpHbvw";
+  }
+}, 1000);
+</script>
+
+</body>
+</html>
