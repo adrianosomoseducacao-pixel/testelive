@@ -41,43 +41,35 @@ h1 {
 
 <script>
 
-// =============================
-// 🔥 CONFIGURAÇÃO
-// =============================
+// 🔥 CONFIG
 var dataEvento = new Date("Mar 25, 2026 15:00:00").getTime();
 
 var linkFormulario = "https://forms.zohopublic.com/sabers/form/LiveFormativaPlataformaClickSaberPlurall1/formperma/5LD4JToeYj2P1CBy58rRVP_H86e2azMkdpyW4DpHbvw";
 var linkEvento = "https://teams.microsoft.com/meet/22305340668222?p=j9pNsfJWKuFR9jnrQl";
 
-// =============================
-// 🔥 CAPTURA PARÂMETROS
-// =============================
+// 🔥 PARÂMETROS
 var params = new URLSearchParams(window.location.search);
 
-// 🔥 SE VEIO DO FORM → SALVA INSCRIÇÃO
+// 🔥 SALVA INSCRIÇÃO
 if (params.get("ok") === "1") {
-  localStorage.setItem("inscrito", "sim");
+  try {
+    localStorage.setItem("inscrito", "sim");
+  } catch (e) {}
 }
 
-// =============================
-// 🔒 CONTROLE DE REDIRECIONAMENTO
-// =============================
+// 🔒 CONTROLE
 var redirecionado = false;
 
-// =============================
 // ⏳ FUNÇÃO PRINCIPAL
-// =============================
 function atualizar() {
 
-  // Evita múltiplos redirecionamentos
-  if (redirecionado) return;
+  var el = document.getElementById("countdown");
+  if (!el) return;
 
   var now = new Date().getTime();
   var distance = dataEvento - now;
 
-  // ======================================
-  // 🔒 REGRA ABSOLUTA → ANTES DO EVENTO
-  // ======================================
+  // 🔒 ANTES DO EVENTO → SÓ CONTADOR
   if (distance > 0) {
 
     var days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -85,32 +77,33 @@ function atualizar() {
     var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    document.getElementById("countdown").innerHTML =
-      days + " dias " + hours + "h " + minutes + "m " + seconds + "s";
-
-    return; // 🚨 NÃO deixa passar daqui
+    el.innerHTML = days + " dias " + hours + "h " + minutes + "m " + seconds + "s";
+    return;
   }
 
-  // ======================================
-  // ⏰ CHEGOU A HORA → DECIDE
-  // ======================================
-  redirecionado = true;
+  // 🔥 DEPOIS DO EVENTO → REDIRECIONA UMA VEZ
+  if (!redirecionado) {
 
-  var inscrito = localStorage.getItem("inscrito") === "sim";
+    redirecionado = true;
 
-  if (inscrito) {
-    window.location.replace(linkEvento);
-  } else {
-    window.location.replace(linkFormulario);
+    var inscrito = false;
+
+    try {
+      inscrito = localStorage.getItem("inscrito") === "sim";
+    } catch (e) {}
+
+    if (inscrito) {
+      window.location.href = linkEvento;
+    } else {
+      window.location.href = linkFormulario;
+    }
   }
 }
 
-// =============================
 // 🔁 LOOP
-// =============================
 setInterval(atualizar, 1000);
 
-// 🔥 EXECUTA IMEDIATAMENTE
+// 🔥 PRIMEIRA EXECUÇÃO
 atualizar();
 
 </script>
