@@ -1,48 +1,7 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Live</title>
-
-<style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #0f172a;
-  color: white;
-  text-align: center;
-}
-
-.container {
-  padding: 20px;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-h1 {
-  font-size: clamp(22px, 5vw, 36px);
-  margin-bottom: 20px;
-}
-
-#countdown {
-  font-size: clamp(20px, 6vw, 32px);
-  font-weight: bold;
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-  <h1>A live começa em:</h1>
-  <div id="countdown">Carregando...</div>
-</div>
-
 <script>
 
 // 🔥 CONFIG
-var dataEvento = new Date("Mar 20, 2026 00:57:00").getTime();
+var dataEvento = new Date("Mar 25, 2026 15:00:00").getTime();
 
 var linkFormulario = "https://forms.zohopublic.com/sabers/form/LiveFormativaPlataformaClickSaberPlurall1/formperma/5LD4JToeYj2P1CBy58rRVP_H86e2azMkdpyW4DpHbvw";
 var linkEvento = "https://teams.microsoft.com/meet/22305340668222?p=j9pNsfJWKuFR9jnrQl";
@@ -50,7 +9,7 @@ var linkEvento = "https://teams.microsoft.com/meet/22305340668222?p=j9pNsfJWKuFR
 // 🔥 PARÂMETROS
 var params = new URLSearchParams(window.location.search);
 
-// 🔥 SE VEIO DO FORM → SALVA
+// 🔥 SALVA INSCRIÇÃO
 if (params.get("ok") === "1") {
   localStorage.setItem("inscrito", "sim");
 }
@@ -58,7 +17,7 @@ if (params.get("ok") === "1") {
 // 🔒 CONTROLE
 var redirecionado = false;
 
-// ⏳ FUNÇÃO PRINCIPAL
+// ⏳ FUNÇÃO
 function atualizar() {
 
   if (redirecionado) return;
@@ -66,7 +25,7 @@ function atualizar() {
   var now = new Date().getTime();
   var distance = dataEvento - now;
 
-  // 🧠 REGRA 1: ANTES DO EVENTO → SÓ CONTADOR
+  // 🔥 REGRA ABSOLUTA: ANTES DO EVENTO → NUNCA REDIRECIONA
   if (distance > 0) {
 
     var days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -77,28 +36,25 @@ function atualizar() {
     document.getElementById("countdown").innerHTML =
       days + " dias " + hours + "h " + minutes + "m " + seconds + "s";
 
-    return; // 🔥 impede QUALQUER redirecionamento
+    return; // 🔒 trava total
   }
 
-  // 🧠 REGRA 2: CHEGOU A HORA → DECIDE
+  // 🔥 SÓ AQUI decide redirecionamento
   redirecionado = true;
 
   var inscrito = localStorage.getItem("inscrito") === "sim";
 
   if (inscrito) {
-    window.location.href = linkEvento;
+    window.location.replace(linkEvento); // 🔥 melhor que href
   } else {
-    window.location.href = linkFormulario;
+    window.location.replace(linkFormulario);
   }
 }
 
 // 🔁 LOOP
 setInterval(atualizar, 1000);
 
-// 🔥 PRIMEIRA EXECUÇÃO
+// 🔥 EXECUTA IMEDIATO
 atualizar();
 
 </script>
-
-</body>
-</html>
